@@ -94,6 +94,9 @@
   let decision = { videoId: null, resolved: false, skip: false };
   let resolvingVideoId = null;
   const gatedVideos = new WeakSet();
+  // Videos we've paused ourselves while determining the channel (as opposed to the user pausing).
+  // Tracked so we know whether/when to resume playback once a decision is made.
+  const gatePausedVideos = new WeakSet();
 
   function resetDecisionIfNeeded(videoId) {
     if (decision.videoId !== videoId) {
@@ -132,18 +135,27 @@
     setTimeout(finish, 1500);
   }
 
-  function giveUp(videoId) {
+  function releaseGate(video) {
+    if (gatePausedVideos.has(video)) {
+      gatePausedVideos.delete(video);
+      resumePlayback(video);
+    }
+  }
+
+  function giveUp(video, videoId) {
     if (decision.videoId === videoId) {
       decision.resolved = true;
       decision.skip = false;
     }
     if (resolvingVideoId === videoId) resolvingVideoId = null;
-    log("Could not determine channel info in time, leaving playback untouched", { videoId });
+    releaseGate(video);
+    log("Could not determine channel info in time, resuming playback untouched", { videoId });
   }
 
   // Repeatedly try to find the channel name every 50ms until found, or until the deadline is reached.
-  // Autoplay is NOT paused during this detection phase — only once a configured channel is confirmed
-  // do we pause, seek, and resume. Non-matching channels are never touched at all.
+  // The video is paused as soon as we begin resolving (see beginResolving) so that no intro frame can
+  // ever be shown, even briefly, while we determine the channel. Non-matching channels are resumed
+  // immediately once determined; matching channels are seeked first, then resumed.
   function resolveDecision(video, videoId, deadline) {
     if (decision.videoId !== videoId || decision.resolved) {
       if (resolvingVideoId === videoId) resolvingVideoId = null;
@@ -162,7 +174,7 @@
 
     if (!channelName) {
       if (timedOut) {
-        giveUp(videoId);
+        giveUp(video, videoId);
         return;
       }
       setTimeout(() => resolveDecision(video, videoId, deadline), 50);
@@ -174,19 +186,19 @@
     resolvingVideoId = null;
 
     if (!rule) {
-      log("No rule for this channel, leaving autoplay untouched", { channelName });
+      log("No rule for this channel, resuming playback untouched", { channelName });
       decision.skip = false;
+      releaseGate(video);
       return;
     }
 
-    // Matching channel confirmed: only now do we pause (if currently playing), seek, then resume.
+    // Matching channel confirmed: seek then resume (video is already paused by the gate in beginResolving).
     const seconds = cachedSettings.defaultSkipSeconds;
     decision.skip = true;
     log("Matching channel detected, skipping intro", { channelName, seconds, videoId });
 
-    const wasPlaying = !video.paused && !video.ended;
-    if (wasPlaying) video.pause();
-    performSeekAndResume(video, seconds, wasPlaying);
+    gatePausedVideos.delete(video);
+    performSeekAndResume(video, seconds, true);
   }
 
   function beginResolving(video, videoId) {
@@ -194,11 +206,20 @@
     if (decision.resolved) return;
     if (resolvingVideoId === videoId) return; // already resolving
     resolvingVideoId = videoId;
+
+    // Pause immediately, before we know the channel, so no intro frame can ever be shown even briefly.
+    // Channel detection is normally near-instant (the name is already in the DOM), so this is typically
+    // imperceptible even for channels that turn out not to match.
+    if (!video.paused && !video.ended) {
+      video.pause();
+      gatePausedVideos.add(video);
+    }
+
     resolveDecision(video, videoId, Date.now() + 3000);
   }
 
-  // Detect as soon as the video "starts playing" (autoplay or user pressed play). Detection itself never
-  // pauses the video — only a confirmed matching channel triggers a pause+seek+resume (see resolveDecision).
+  // Detect as soon as the video "starts playing" (autoplay or user pressed play). beginResolving() pauses
+  // the video right away so no intro frame can leak through while we determine the channel.
   function onVideoPlay(event) {
     if (!cachedSettings.enabled) return;
     const video = event.target;
