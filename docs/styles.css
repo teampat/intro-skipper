@@ -363,3 +363,44 @@ footer .foot-links {
     font-size: 30px;
   }
 }
+
+/* ---- Legal / prose pages ---- */
+.legal {
+  max-width: 720px;
+  padding-top: 8px;
+  padding-bottom: 16px;
+}
+
+.legal h2 {
+  font-size: 20px;
+  margin: 32px 0 10px;
+}
+
+.legal h2:first-of-type {
+  margin-top: 8px;
+}
+
+.legal p {
+  color: var(--muted);
+  font-size: 14.5px;
+  margin: 0 0 14px;
+}
+
+.legal ul {
+  margin: 0 0 14px;
+  padding-left: 20px;
+  color: var(--muted);
+  font-size: 14.5px;
+}
+
+.legal li {
+  margin-bottom: 6px;
+}
+
+.legal code {
+  background: #f1f1f1;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 13px;
+  color: var(--ink);
+}

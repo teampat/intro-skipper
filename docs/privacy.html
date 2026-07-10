@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — Intro Skipper</title>
+  <meta name="description" content="Privacy policy for the Intro Skipper Chrome extension: what data it collects (none), what permissions it uses, and how your settings are stored." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container">
+      <div class="brand">
+        <span class="logo">⏭</span>
+        Intro Skipper
+      </div>
+      <div class="links">
+        <a href="index.html#features">Features</a>
+        <a href="index.html#install">Install</a>
+        <a href="index.html#faq">FAQ</a>
+        <a href="https://github.com/teampat/intro-skipper" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <span class="badge">Privacy Policy</span>
+      <h1>Your data stays on your device</h1>
+      <p class="lead">
+        Intro Skipper is designed to work entirely inside your browser. This page explains
+        exactly what data the extension touches, why, and where it's stored.
+      </p>
+    </div>
+  </header>
+
+  <section id="policy">
+    <div class="container legal">
+      <p><em>Last updated: July 10, 2026</em></p>
+
+      <h2>Summary</h2>
+      <p>
+        Intro Skipper does not collect, transmit, sell, or share any personal data.
+        It does not use analytics, trackers, or remote servers of any kind. Everything
+        the extension does happens locally, inside your own Chrome browser.
+      </p>
+
+      <h2>What data the extension uses</h2>
+      <p>The extension stores the following, and only this, using Chrome's built-in <code>chrome.storage.sync</code> API:</p>
+      <ul>
+        <li>Your default "skip to second" value.</li>
+        <li>The list of YouTube channel names you've added.</li>
+      </ul>
+      <p>
+        This data is stored locally by Chrome and, if you're signed into Chrome sync, synced
+        across your own devices by Google — the same way Chrome syncs bookmarks or other
+        extension settings. Intro Skipper itself never sends this data anywhere else.
+      </p>
+
+      <h2>Permissions explained</h2>
+      <ul>
+        <li>
+          <strong><code>storage</code></strong> — used to save your default skip second and
+          channel list so they persist between browser sessions.
+        </li>
+        <li>
+          <strong><code>host_permissions</code> for <code>https://www.youtube.com/*</code></strong> —
+          used so the content script can detect the current video's channel and, if it matches
+          one you've added, pause and seek playback to your chosen second. The extension does
+          not run on, or read data from, any other website.
+        </li>
+      </ul>
+
+      <h2>What the extension does <em>not</em> do</h2>
+      <ul>
+        <li>It does not collect browsing history.</li>
+        <li>It does not send any data to external servers — there are none.</li>
+        <li>It does not use cookies, analytics, or third-party tracking of any kind.</li>
+        <li>It does not require or ask you to create an account.</li>
+      </ul>
+
+      <h2>Changes to this policy</h2>
+      <p>
+        If this policy ever changes, the update will be reflected on this page along with a
+        new "last updated" date. Since the extension has no update-check mechanism of its own,
+        please check back on this page from time to time.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions about this policy or the extension can be raised as an issue on
+        <a href="https://github.com/teampat/intro-skipper/issues" target="_blank" rel="noopener">GitHub</a>.
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="foot-links">
+        <a href="index.html">Home</a>
+        <a href="https://github.com/teampat/intro-skipper" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/teampat/intro-skipper/issues" target="_blank" rel="noopener">Report an issue</a>
+      </div>
+      <div>Intro Skipper — a small Chrome extension, not affiliated with YouTube or Google.</div>
+    </div>
+  </footer>
+
+</body>
+</html>
