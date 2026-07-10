@@ -12,6 +12,7 @@
   };
 
   let cachedSettings = DEFAULT_SETTINGS;
+  let settingsLoaded = false;
   let checkTimer = null;
   const DEBUG = true; // Enable logging to help debug via DevTools console (press F12 and check Console)
 
@@ -30,6 +31,7 @@
   function loadSettings() {
     chrome.storage.sync.get(DEFAULT_SETTINGS, (items) => {
       cachedSettings = items;
+      settingsLoaded = true;
     });
   }
 
@@ -170,7 +172,10 @@
     const timedOut = Date.now() > deadline;
     const renderedVideoId = getRenderedVideoId();
     const domSynced = !renderedVideoId || renderedVideoId === videoId;
-    const channelName = domSynced ? getChannelName() : null;
+    // Don't match against the channel list until settings have actually loaded from storage
+    // (the script runs at document_start, so an early autoplay could otherwise be resolved
+    // against the empty default channel list and wrongly released without skipping).
+    const channelName = settingsLoaded && domSynced ? getChannelName() : null;
 
     if (!channelName) {
       if (timedOut) {
@@ -220,7 +225,7 @@
 
   // Detect as soon as the video "starts playing" (autoplay or user pressed play). beginResolving() pauses
   // the video right away so no intro frame can leak through while we determine the channel.
-  function onVideoPlay(event) {
+  function onVideoActivity(event) {
     if (!cachedSettings.enabled) return;
     const video = event.target;
     const videoId = getVideoIdFromUrl();
@@ -229,13 +234,42 @@
     resetDecisionIfNeeded(videoId);
     if (decision.resolved) return; // already decided for this video, let it play normally
 
+    // Already resolving this video: YouTube's player may restart playback on its own mid-resolution
+    // (it often calls play() again). Pause it right back so the intro can't leak through while we wait.
+    if (resolvingVideoId === videoId) {
+      if (!video.paused && !video.ended) {
+        video.pause();
+        gatePausedVideos.add(video);
+      }
+      return;
+    }
+
     beginResolving(video, videoId);
   }
 
   function attachGate(video) {
     if (gatedVideos.has(video)) return;
     gatedVideos.add(video);
-    video.addEventListener("play", onVideoPlay);
+    video.addEventListener("play", onVideoActivity);
+  }
+
+  // Catch activity from ANY video element the moment it happens, even for elements created later or
+  // before the per-element gate is attached. These media events don't bubble, but a capture-phase
+  // listener on the document still sees them.
+  // - "play"/"playing": autoplay or user pressing play, plus YouTube restarting playback mid-resolution
+  // - "loadstart": a new video loading into the SAME element during gapless SPA navigation, where
+  //   playback continues without a new "play" event ever firing
+  for (const eventName of ["play", "playing", "loadstart"]) {
+    document.addEventListener(
+      eventName,
+      (event) => {
+        if (event.target && event.target.tagName === "VIDEO") {
+          attachGate(event.target);
+          onVideoActivity(event);
+        }
+      },
+      true
+    );
   }
 
   function ensureGateAttached() {
