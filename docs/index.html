@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Intro Skipper — Auto-skip YouTube intros for specific channels</title>
+  <meta name="description" content="A Chrome extension that automatically skips the intro of YouTube videos for the channels you choose, starting playback from the second you set." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container">
+      <div class="brand">
+        <span class="logo">⏭</span>
+        Intro Skipper
+      </div>
+      <div class="links">
+        <a href="#features">Features</a>
+        <a href="#install">Install</a>
+        <a href="#faq">FAQ</a>
+        <!-- TODO: replace with your actual GitHub repo URL -->
+        <a href="https://github.com/your-username/intro-skipper" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <span class="badge">Chrome Extension · Manifest V3</span>
+      <h1>Skip YouTube intros automatically,<br />only for the channels you pick</h1>
+      <p class="lead">
+        Set a default second to start from (e.g. 14s), add the channels you want,
+        and Intro Skipper will jump straight past the intro every time — without
+        ever showing a flash of the intro playing first.
+      </p>
+      <div class="cta-row">
+        <!-- TODO: replace with your actual GitHub repo URL -->
+        <a class="btn btn-primary" href="https://github.com/your-username/intro-skipper" target="_blank" rel="noopener">Get it on GitHub</a>
+        <a class="btn btn-secondary" href="#install">Installation guide</a>
+      </div>
+
+      <div class="preview">
+        <div class="preview-header">
+          <strong>Intro Skipper</strong>
+          <span class="switch"></span>
+        </div>
+        <div class="preview-body">
+          <div class="row">
+            <span>Skip to second (default)</span>
+            <span class="chip">14</span>
+          </div>
+          <div class="row">
+            <span>MrBeast</span>
+            <span class="chip">14s</span>
+          </div>
+          <div class="row">
+            <span>GMM Karaoke</span>
+            <span class="chip">14s</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section id="features">
+    <div class="container">
+      <h2 class="section-title">Everything you need, nothing you don't</h2>
+      <p class="section-sub">A small popup, a simple channel list, and playback that just works.</p>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="icon">⏱</div>
+          <h3>One default skip time</h3>
+          <p>Set a single "skip to second" value that applies to every configured channel — no clutter, no per-channel overrides to manage.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">🎯</div>
+          <h3>Channel-specific</h3>
+          <p>Only skips intros for the channels you explicitly add. Every other video on YouTube plays completely untouched.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">➕</div>
+          <h3>"Use Current Channel" button</h3>
+          <p>Watching a video already? One click grabs the channel name straight from the open YouTube tab — no typing needed.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">🚫</div>
+          <h3>No intro flash</h3>
+          <p>Playback is paused the instant it starts, seeked to your chosen second, then resumed — so you never see or hear the intro leak through.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">🔀</div>
+          <h3>Handles YouTube's SPA navigation</h3>
+          <p>Works when clicking between videos without a full page reload, and re-checks the channel every time the video changes.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">🔒</div>
+          <h3>Local settings only</h3>
+          <p>All settings are stored with <code>chrome.storage.sync</code> — no external servers, no tracking, no accounts.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt" id="install">
+    <div class="container">
+      <h2 class="section-title">Install in under a minute</h2>
+      <p class="section-sub">Not on the Chrome Web Store yet — load it as an unpacked extension.</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="num">1</div>
+          <div>
+            <h4>Download the source</h4>
+            <!-- TODO: replace with your actual GitHub repo URL -->
+            <p>Clone or download this repository from <a href="https://github.com/your-username/intro-skipper" target="_blank" rel="noopener">GitHub</a>.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="num">2</div>
+          <div>
+            <h4>Open Chrome extensions page</h4>
+            <p>Go to <code>chrome://extensions</code> and turn on <strong>Developer mode</strong> (top right).</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="num">3</div>
+          <div>
+            <h4>Load unpacked</h4>
+            <p>Click <strong>Load unpacked</strong> and select the project folder (the one containing <code>manifest.json</code>).</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="num">4</div>
+          <div>
+            <h4>Configure your channels</h4>
+            <p>Click the extension icon, set your default skip second, and add the channels you want. Done!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="container">
+      <h2 class="section-title">FAQ</h2>
+
+      <div class="faq-item">
+        <h4>Does this skip intros on every channel?</h4>
+        <p>No. It only acts on channels you've explicitly added in the popup. Everything else plays normally.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Will I see the intro for a split second before it skips?</h4>
+        <p>The extension pauses playback the instant it starts (before the first frame renders), figures out the channel, then seeks and resumes — so there's no visible flash in normal use.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Does it send my data anywhere?</h4>
+        <p>No. Everything runs locally in your browser and settings are stored with Chrome's built-in <code>storage.sync</code> API.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Does it work on Shorts and normal videos?</h4>
+        <p>Yes, both are supported since the extension reads the video ID from the URL for either format.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="foot-links">
+        <!-- TODO: replace with your actual GitHub repo URL -->
+        <a href="https://github.com/your-username/intro-skipper" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/your-username/intro-skipper/issues" target="_blank" rel="noopener">Report an issue</a>
+      </div>
+      <div>Intro Skipper — a small Chrome extension, not affiliated with YouTube or Google.</div>
+    </div>
+  </footer>
+
+</body>
+</html>

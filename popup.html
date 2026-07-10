@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Intro Skipper</title>
+<link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Intro Skipper</h1>
+      <label class="switch">
+        <input type="checkbox" id="enabledToggle" />
+        <span class="slider"></span>
+      </label>
+    </header>
+
+    <section class="field-row">
+      <label for="defaultSeconds">Skip to second (default)</label>
+      <input type="number" id="defaultSeconds" min="0" step="1" />
+    </section>
+
+    <section class="add-channel">
+      <h2>Add YouTube Channel</h2>
+      <div class="field-row">
+        <input type="text" id="newChannelName" placeholder="Channel name, e.g. MrBeast" />
+        <button id="useCurrentChannelBtn" title="Use the channel name from the current YouTube tab">Use Current Channel</button>
+        <button id="addChannelBtn">Add</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>YouTube Channel List</h2>
+      <ul id="channelList" class="channel-list"></ul>
+      <p id="emptyState" class="empty-state">No channels configured yet</p>
+    </section>
+
+    <p class="status" id="statusMsg"></p>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

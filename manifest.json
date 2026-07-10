@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "Intro Skipper",
+  "version": "1.0.0",
+  "description": "Automatically skip the intro of YouTube videos for specific channels (set the second to start playing from, e.g. 14 seconds).",
+  "permissions": ["storage"],
+  "host_permissions": ["https://www.youtube.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Intro Skipper"
+  }
+}
